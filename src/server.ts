@@ -14,7 +14,12 @@ if (process.platform === "linux") {
 const relayHat = new WaveshareRelayHat(Gpio);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript with Express!');
+  const result = Object.entries(relayHat._pins).map<{id: string, pin: number, state: number}>(([id, pin]) => ({
+    id,
+    pin: pin.gpio,
+    state: pin.digitalRead()
+  }))
+  res.json(result);
 });
 
 app.post('/:id/on', (req: Request, res: Response) => {
@@ -24,7 +29,7 @@ app.post('/:id/on', (req: Request, res: Response) => {
   }
   
   const result = relayHat.turnOn(id);
-  res.send({ id: result.id, pin: result.pin.gpio });
+  res.send({ id: result.id, pin: result.pin.gpio, state: result.pin.digitalRead() });
 });
 
 app.post('/:id/off', (req: Request, res: Response) => {
@@ -34,7 +39,7 @@ app.post('/:id/off', (req: Request, res: Response) => {
   }
   
   const result = relayHat.turnOff(id);
-  res.send({ id: result.id, pin: result.pin.gpio });
+  res.send({ id: result.id, pin: result.pin.gpio, state: result.pin.digitalRead() });
 });
 
 app.listen(PORT, () => {
