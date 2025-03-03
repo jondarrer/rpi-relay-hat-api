@@ -23,11 +23,11 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/:id', (req: Request, res: Response) => {
-  const result = Object.entries(relayHat._pins).filter(([id]) => id === req.params.id).map<{id: string, pin: number, state: number}>(([id, pin]) => ({
+  const result = Object.entries(relayHat._pins).map<{id: string, pin: number, state: number}>(([id, pin]) => ({
     id,
     pin: pin.gpio,
     state: pin.digitalRead()
-  }))
+  })).filter(({id}) => id === req.params.id)
   res.json(result);
 });
 
