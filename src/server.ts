@@ -22,6 +22,15 @@ app.get('/', (req: Request, res: Response) => {
   res.json(result);
 });
 
+app.get('/:id', (req: Request, res: Response) => {
+  const result = Object.entries(relayHat._pins).filter(([id]) => id === req.params.id).map<{id: string, pin: number, state: number}>(([id, pin]) => ({
+    id,
+    pin: pin.gpio,
+    state: pin.digitalRead()
+  }))
+  res.json(result);
+});
+
 app.post('/:id/on', (req: Request, res: Response) => {
   const { id } = req.params;
   if (!isValidChannel(id)) {

@@ -1,4 +1,5 @@
 # rpi-relay-hat-api
+
 An API to control the Waveshare RPi Relay Board.
 
 ## Install dependencies (on Raspberry Pi only)
