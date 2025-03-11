@@ -4,57 +4,74 @@ enum EState {
   ON = 'ON',
   OFF = 'OFF',
 }
+
+export enum EMode {
+  OUTPUT = 1,
+}
+
 interface IOperationResult {
-  id: ChannelId,
-  pin: IGpio,
-  state: EState
+  id: ChannelId;
+  channel: IGpio;
+  state: EState;
+}
+
+export interface IChannelConfig {
+  channelId: string;
+  pinNo: number;
+  mode: EMode;
+  name?: string;
+}
+
+interface IConstructorParams {
+  Gpio: IGpioConstructor;
+  channels: IChannelConfig[];
 }
 
 /**
  * https://www.waveshare.com/wiki/RPi_Relay_Board
  */
 class WaveshareRelayHat {
-  _pins: {CH1: IGpio, CH2: IGpio, CH3: IGpio};
+  // _pins: {CH1: IGpio, CH2: IGpio, CH3: IGpio};
+  _channels: Record<string, IGpio>;
 
-  constructor(Gpio: IGpioConstructor) {
-    this._pins = {
-      CH1: new Gpio(26, { mode: Gpio.OUTPUT }),
-      CH2: new Gpio(20, { mode: Gpio.OUTPUT }),
-      CH3: new Gpio(21, { mode: Gpio.OUTPUT }),
-    };
+  constructor({ Gpio, channels }: IConstructorParams) {
+    this._channels = channels.reduce<Record<string, IGpio>>((prev, { channelId, pinNo, mode }) => {
+      prev[channelId] = new Gpio(pinNo, { mode });
+      return prev;
+    }, {});
   }
 
   /**
-   * @param id 
+   * @param id
    */
   turnOn = (id: ChannelId): IOperationResult => {
-    const pin = this._pins[id];
+    const channel = this._channels[id];
 
-    if (pin) { 
-      pin.digitalWrite(1);
+    if (channel) {
+      channel.digitalWrite(1);
       console.debug(`Relay ${id} is now 'ON'`);
     } else {
       throw new Error(`Invalid relay specified: ${id}`);
     }
 
-    return { id, pin, state: EState.ON };
-  }
+    return { id, channel, state: EState.ON };
+  };
 
   /**
-   * @param id 
+   * @param id
    */
   turnOff = (id: ChannelId): IOperationResult => {
-    const pin = this._pins[id];
+    const channel = this._channels[id];
 
-    if (pin) { 
-      pin.digitalWrite(0);
+    if (channel) {
+      channel.digitalWrite(0);
       console.debug(`Relay ${id} is now 'OFF'`);
     } else {
       throw new Error(`Invalid relay specified: ${id}`);
     }
 
-    return { id, pin, state: EState.OFF };
-  }
+    return { id, channel, state: EState.OFF };
+  };
 }
 
 export { WaveshareRelayHat };

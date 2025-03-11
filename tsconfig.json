@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "composite": true,
     "experimentalDecorators": true,
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "include": ["*.ts", "src"]
 }

@@ -11,9 +11,9 @@ interface IGpioConstructor {
 interface IGpio {
   gpio: number;
   /**
-  * Sets the GPIO level to 0 or 1. If PWM or servo pulses are active on the GPIO they are switched off.
-  * @param level 0 or 1
-  */
+   * Sets the GPIO level to 0 or 1. If PWM or servo pulses are active on the GPIO they are switched off.
+   * @param level 0 or 1
+   */
   digitalWrite(level: Level): void;
 
   /**
@@ -26,7 +26,10 @@ class MockGpio implements IGpio {
   static OUTPUT = 1; // Simulating pigpio's OUTPUT constant
   level: Level;
 
-  constructor(public gpio: number, options: { mode: number }) {
+  constructor(
+    public gpio: number,
+    options: { mode: number }
+  ) {
     console.log(`MockGpio initialized on pin ${this.gpio} with mode ${options.mode}`);
     this.level = this.digitalRead();
   }
@@ -41,7 +44,7 @@ class MockGpio implements IGpio {
   }
 }
 
-type ChannelId = 'CH1' | 'CH2' | 'CH3';
+type ChannelId = 'CH1' | 'CH2' | 'CH3' | 'CH4' | 'CH5' | 'CH6' | 'CH7' | 'CH8' | 'CH9';
 
 type Level = 0 | 1;
 
