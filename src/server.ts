@@ -17,12 +17,16 @@ const relayHat = new WaveshareRelayHat({
   channels,
 });
 
+const getChannelName = (channelId: string): string | undefined =>
+  channels.find((channel) => channel.channelId === channelId)?.name;
+
 app.get('/', (req: Request, res: Response) => {
   const result = Object.entries(relayHat._channels).map<{ id: string; pin: number; state: number }>(
     ([id, channel]) => ({
       id,
       pin: channel.gpio,
       state: channel.digitalRead(),
+      name: getChannelName(id),
     })
   );
   res.json(result);
@@ -34,6 +38,7 @@ app.get('/:id', (req: Request, res: Response) => {
       id,
       pin: channel.gpio,
       state: channel.digitalRead(),
+      name: getChannelName(id),
     }))
     .filter(({ id }) => id === req.params.id);
   res.json(result);
@@ -46,7 +51,12 @@ app.post('/:id/on', (req: Request, res: Response) => {
   }
 
   const result = relayHat.turnOn(id);
-  res.send({ id: result.id, pin: result.channel.gpio, state: result.channel.digitalRead() });
+  res.send({
+    id: result.id,
+    pin: result.channel.gpio,
+    state: result.channel.digitalRead(),
+    name: getChannelName(id),
+  });
 });
 
 app.post('/:id/off', (req: Request, res: Response) => {
@@ -56,7 +66,12 @@ app.post('/:id/off', (req: Request, res: Response) => {
   }
 
   const result = relayHat.turnOff(id);
-  res.send({ id: result.id, pin: result.channel.gpio, state: result.channel.digitalRead() });
+  res.send({
+    id: result.id,
+    pin: result.channel.gpio,
+    state: result.channel.digitalRead(),
+    name: getChannelName(id),
+  });
 });
 
 app.listen(PORT, () => {
