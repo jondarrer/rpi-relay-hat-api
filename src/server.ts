@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import { port, channels } from './config';
 import { WaveshareRelayHat } from './waveshare-relay-hat';
 import { MockGpio, type ChannelId } from './types';
+import { systemInfo } from './system-info';
 
 const app = express();
 const PORT = port || 3000;
@@ -30,6 +31,11 @@ app.get('/', (req: Request, res: Response) => {
     })
   );
   res.json(result);
+});
+
+app.get('/sys-info', (req: Request, res: Response) => {
+  console.log(systemInfo());
+  res.json(systemInfo());
 });
 
 app.get('/:id', (req: Request, res: Response) => {

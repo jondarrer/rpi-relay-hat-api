@@ -43,6 +43,28 @@ PORT=3000
 sudo yarn start
 ```
 
+## Endpoints
+
+### GET /
+
+Get details of all available relays.
+
+### GET /sys-info
+
+Get info about current system.
+
+### GET /:id
+
+Get details of a particular relay.
+
+### POST /:id/on
+
+Turn a relay on (digital write `1`).
+
+### POST /:id/off
+
+Turn a relay off (digital write `0`).
+
 ## Managed process
 
 Use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) to setup the script when booting up.
