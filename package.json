@@ -1,6 +1,6 @@
 {
   "name": "rpi-relay-hat-api",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "An API to control the Waveshare RPi Relay Board",
   "license": "UNLICENSED",
   "author": "Jonathan Darrer <jonny@jondarrer.me.uk>",
