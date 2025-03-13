@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 import { integer, json } from './env-asserts';
-import { IChannelConfig } from './waveshare-relay-hat';
+import type { IChannelConfig } from './waveshare-relay-hat';
 
 const envFilePath = process.env.ENV_FILE_PATH;
 

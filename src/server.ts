@@ -47,7 +47,10 @@ app.get('/:id', (req: Request, res: Response) => {
       name: getChannelName(id),
     }))
     .filter(({ id }) => id === req.params.id);
-  res.json(result);
+  if (result.length === 0) {
+    return res.json({ error: `Unable to find relay ${req.params.id}` });
+  }
+  res.json(result[0]);
 });
 
 app.post('/:id/on', (req: Request, res: Response) => {

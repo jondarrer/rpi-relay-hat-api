@@ -25,7 +25,21 @@ sudo ln -s "$(which yarn)" /usr/local/bin/yarn
 
 ```sh
 yarn dlx rpi-relay-hat-api
-rpi-relay-hat-api
+```
+
+### Configure the application
+
+Create a rpi-relay-hat-api.env file (in a globally accessible location will allow it to be run as a service) and add details of the channels and server port, something like:
+
+```sh
+RELAY_HAT_CHANNELS=[{ "channelId": "CH1", "pinNo": 26, "mode": 1, "name": "Mirror Light" }, { "channelId": "CH2", "pinNo": 20, "mode": 1, "name": "Mirror Demister" }]
+PORT=3000
+```
+
+### Run the package
+
+```sh
+ENV_FILE_PATH=/usr/lib/node_modules/rpi-relay-hat-api/rpi-relay-hat-api.env rpi-relay-hat-api
 ```
 
 ## Development options
