@@ -21,14 +21,32 @@ sudo ln -s "$(which npm)" /usr/local/bin/npm
 sudo ln -s "$(which yarn)" /usr/local/bin/yarn
 ```
 
-## Build application
+## Install and run the package
+
+```sh
+yarn dlx rpi-relay-hat-api
+rpi-relay-hat-api
+```
+
+## Development options
+
+Rather than installing the package, these development options allow it to be run and tested:
+
+## Download the package
+
+```sh
+git clone git@github.com:jondarrer/rpi-relay-hat-api
+cd rpi-relay-hat-api
+```
+
+### Build application
 
 ```sh
 yarn
 yarn build
 ```
 
-## Configure the application
+### Configure the application
 
 Create a .env file and add details of the channels and server port, something like:
 
@@ -37,7 +55,7 @@ RELAY_HAT_CHANNELS=[{ "channelId": "CH1", "pinNo": 26, "mode": 1, "name": "Mirro
 PORT=3000
 ```
 
-## Run
+### Run
 
 ```sh
 sudo yarn start

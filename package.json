@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https:///github.com/jondarrer/rpi-relay-hat-api"
   },
+  "bin": {
+    "rpi-relay-hat-api": "./bin/index.js"
+  },
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/src/server.js",
