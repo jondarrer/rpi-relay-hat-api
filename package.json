@@ -47,5 +47,9 @@
     "node": ">=22.14 <23",
     "npm": "please-use-yarn"
   },
+  "keywords": [
+    "raspberry-pi",
+    "waveshare"
+  ],
   "packageManager": "yarn@4.6.0"
 }
