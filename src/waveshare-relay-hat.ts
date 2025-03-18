@@ -1,4 +1,4 @@
-import { IGpioConstructor, IGpio, ChannelId } from './types';
+import { IGpioConstructor, IGpio, ChannelId, Level } from './types';
 
 enum EState {
   ON = 'ON',
@@ -71,6 +71,25 @@ class WaveshareRelayHat {
     }
 
     return { id, channel, state: EState.OFF };
+  };
+
+  /**
+   * @param id
+   */
+  toggleOnOff = (id: ChannelId): IOperationResult => {
+    const channel = this._channels[id];
+    let targetState;
+
+    if (channel) {
+      const currentState = channel.digitalRead();
+      targetState = currentState === 0 ? 1 : 0;
+      channel.digitalWrite(targetState as Level);
+      console.debug(`Relay ${id} is now '${targetState === 0 ? 'OFF' : 'ON'}'`);
+    } else {
+      throw new Error(`Invalid relay specified: ${id}`);
+    }
+
+    return { id, channel, state: targetState === 0 ? EState.OFF : EState.ON };
   };
 }
 

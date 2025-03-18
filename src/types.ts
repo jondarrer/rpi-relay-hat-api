@@ -46,6 +46,6 @@ class MockGpio implements IGpio {
 
 type ChannelId = 'CH1' | 'CH2' | 'CH3' | 'CH4' | 'CH5' | 'CH6' | 'CH7' | 'CH8' | 'CH9';
 
-type Level = 0 | 1;
+export type Level = 0 | 1;
 
 export { IGpioConstructor, IGpio, MockGpio, ChannelId };

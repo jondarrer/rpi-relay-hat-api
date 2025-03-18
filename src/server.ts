@@ -83,6 +83,21 @@ app.post('/:id/off', (req: Request, res: Response) => {
   });
 });
 
+app.post('/:id/toggle', (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!isValidChannel(id)) {
+    return res.status(400).send(`Unsupported channel ${id}`);
+  }
+
+  const result = relayHat.toggleOnOff(id);
+  res.send({
+    id: result.id,
+    pin: result.channel.gpio,
+    state: result.channel.digitalRead(),
+    name: getChannelName(id),
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
