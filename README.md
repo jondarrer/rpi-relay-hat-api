@@ -97,6 +97,10 @@ Turn a relay on (digital write `1`).
 
 Turn a relay off (digital write `0`).
 
+### POST /:id/toggle
+
+Toggles a relay on and off (digital write `1` or `0`), inverting its previous state.
+
 ## Managed process
 
 Use [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) to setup the script when booting up.

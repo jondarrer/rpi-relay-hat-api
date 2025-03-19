@@ -1,25 +1,14 @@
-import { IGpioConstructor, IGpio, ChannelId, Level } from './types';
+import type { IGpioConstructor, IGpio, IChannelConfig, ChannelId, Level } from './types';
 
-enum EState {
+export enum EState {
   ON = 'ON',
   OFF = 'OFF',
 }
 
-export enum EMode {
-  OUTPUT = 1,
-}
-
-interface IOperationResult {
+export interface IOperationResult {
   id: ChannelId;
   channel: IGpio;
   state: EState;
-}
-
-export interface IChannelConfig {
-  channelId: string;
-  pinNo: number;
-  mode: EMode;
-  name?: string;
 }
 
 interface IConstructorParams {
@@ -31,7 +20,6 @@ interface IConstructorParams {
  * https://www.waveshare.com/wiki/RPi_Relay_Board
  */
 class WaveshareRelayHat {
-  // _pins: {CH1: IGpio, CH2: IGpio, CH3: IGpio};
   _channels: Record<string, IGpio>;
 
   constructor({ Gpio, channels }: IConstructorParams) {
@@ -42,14 +30,44 @@ class WaveshareRelayHat {
   }
 
   /**
+   * Gets a single relay channel
    * @param id
+   * @throws Errors if the relay cannot be found
+   */
+  get = (id: ChannelId): IOperationResult => {
+    const channel = this._channels[id];
+    let state: Level;
+
+    if (channel) {
+      state = channel.digitalRead();
+    } else {
+      throw new Error(`Invalid relay specified: ${id}`);
+    }
+
+    return { id, channel, state: state === 0 ? EState.OFF : EState.ON };
+  };
+
+  /**
+   * Gets all available relay channels
+   */
+  getAll = (): IOperationResult[] =>
+    Object.entries(this._channels).map<{ id: ChannelId; channel: IGpio; state: EState }>(([id, channel]) => ({
+      id: id as ChannelId,
+      channel,
+      state: channel.digitalRead() === 0 ? EState.OFF : EState.ON,
+    }));
+
+  /**
+   * Turns on a single relay channel
+   * @param id
+   * @throws Errors if the relay cannot be found
    */
   turnOn = (id: ChannelId): IOperationResult => {
     const channel = this._channels[id];
 
     if (channel) {
       channel.digitalWrite(1);
-      console.debug(`Relay ${id} is now 'ON'`);
+      console.debug(new Date(), `Relay ${id} is now 'ON'`);
     } else {
       throw new Error(`Invalid relay specified: ${id}`);
     }
@@ -58,14 +76,16 @@ class WaveshareRelayHat {
   };
 
   /**
+   * Turns off a single relay channel
    * @param id
+   * @throws Errors if the relay cannot be found
    */
   turnOff = (id: ChannelId): IOperationResult => {
     const channel = this._channels[id];
 
     if (channel) {
       channel.digitalWrite(0);
-      console.debug(`Relay ${id} is now 'OFF'`);
+      console.debug(new Date(), `Relay ${id} is now 'OFF'`);
     } else {
       throw new Error(`Invalid relay specified: ${id}`);
     }
@@ -74,7 +94,9 @@ class WaveshareRelayHat {
   };
 
   /**
+   * Toggles on and off a single relay channel, inverting its previous state
    * @param id
+   * @throws Errors if the relay cannot be found
    */
   toggleOnOff = (id: ChannelId): IOperationResult => {
     const channel = this._channels[id];
@@ -84,7 +106,7 @@ class WaveshareRelayHat {
       const currentState = channel.digitalRead();
       targetState = currentState === 0 ? 1 : 0;
       channel.digitalWrite(targetState as Level);
-      console.debug(`Relay ${id} is now '${targetState === 0 ? 'OFF' : 'ON'}'`);
+      console.debug(new Date(), `Relay ${id} is now '${targetState === 0 ? 'OFF' : 'ON'}'`);
     } else {
       throw new Error(`Invalid relay specified: ${id}`);
     }

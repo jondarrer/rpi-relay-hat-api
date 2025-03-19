@@ -22,9 +22,24 @@ interface IGpio {
   digitalRead(): Level;
 }
 
+interface IChannelConfig {
+  channelId: string;
+  pinNo: number;
+  mode: EMode;
+  name?: string;
+}
+
+type ChannelId = 'CH1' | 'CH2' | 'CH3' | 'CH4' | 'CH5' | 'CH6' | 'CH7' | 'CH8' | 'CH9';
+
+type Level = 0 | 1;
+
+enum EMode {
+  OUTPUT = 1,
+}
+
 class MockGpio implements IGpio {
   static OUTPUT = 1; // Simulating pigpio's OUTPUT constant
-  level: Level;
+  level: Level = 0;
 
   constructor(
     public gpio: number,
@@ -44,8 +59,4 @@ class MockGpio implements IGpio {
   }
 }
 
-type ChannelId = 'CH1' | 'CH2' | 'CH3' | 'CH4' | 'CH5' | 'CH6' | 'CH7' | 'CH8' | 'CH9';
-
-export type Level = 0 | 1;
-
-export { IGpioConstructor, IGpio, MockGpio, ChannelId };
+export { IGpioConstructor, IGpio, MockGpio, ChannelId, Level, IChannelConfig, EMode };
