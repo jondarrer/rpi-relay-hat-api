@@ -12,6 +12,7 @@
   - [Configure the application for development](#configure-the-application-for-development)
   - [Run](#run)
   - [Test](#test)
+  - [Publish](#publish)
 - [Endpoints](#endpoints)
   - [GET /](#get-)
   - [GET /sys-info](#get-sys-info)
@@ -110,6 +111,15 @@ sudo yarn start
 ```sh
 yarn test
 ```
+
+### Publish
+
+```sh
+npm version patch -m "%s"
+git push && git push --tags
+```
+
+And then create a release based on the tag in GitHub; this will then run the GitHub action to publish the package on [npmjs.com](https://www.npmjs.com/package/rpi-relay-hat-api).
 
 ## Endpoints
 
