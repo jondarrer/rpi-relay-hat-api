@@ -8,13 +8,13 @@
     "type": "git",
     "url": "https:///github.com/jondarrer/rpi-relay-hat-api"
   },
-  "bin": "./bin/index.js",
   "main": "dist/server.js",
+  "bin": "./bin/index.js",
   "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "prepare": "husky",
     "start": "node dist/src/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
     "test": "node --import tsx --test --experimental-test-module-mocks \"src/**/*.spec.ts\""
   },
   "dependencies": {
@@ -45,13 +45,24 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.0"
   },
-  "engines": {
-    "node": ">=22.14 <23",
-    "npm": "please-use-yarn"
-  },
   "keywords": [
     "raspberry-pi",
     "waveshare"
   ],
+  "engines": {
+    "node": ">=22.14 <23",
+    "npm": "please-use-yarn"
+  },
+  "lint-staged": {
+    "**/package.json": [
+      "prettier-package-json --write",
+      "git add"
+    ],
+    "src/**/*.ts": [
+      "eslint --fix --quiet",
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ]
+  },
   "packageManager": "yarn@4.6.0"
 }
