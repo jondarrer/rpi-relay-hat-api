@@ -1,6 +1,29 @@
-# rpi-relay-hat-api
+# rpi-relay-hat-api <!-- omit in toc -->
 
-An API to control the Waveshare RPi Relay Board.
+- [Install dependencies (on Raspberry Pi only)](#install-dependencies-on-raspberry-pi-only)
+  - [Install pigpio](#install-pigpio)
+  - [Symlink node, npm \& yarn](#symlink-node-npm--yarn)
+- [Install and run the package](#install-and-run-the-package)
+  - [Configure the application](#configure-the-application)
+  - [Run the package](#run-the-package)
+- [Development options](#development-options)
+  - [Download the package](#download-the-package)
+  - [Build application](#build-application)
+  - [Configure the application for development](#configure-the-application-for-development)
+  - [Run](#run)
+  - [Test](#test)
+- [Endpoints](#endpoints)
+  - [GET /](#get-)
+  - [GET /sys-info](#get-sys-info)
+  - [GET /:id](#get-id)
+  - [POST /:id/on](#post-idon)
+  - [POST /:id/off](#post-idoff)
+  - [POST /:id/toggle](#post-idtoggle)
+- [Managed process](#managed-process)
+  - [Install pm2](#install-pm2)
+  - [Add process to startup script](#add-process-to-startup-script)
+
+An API to control the [Waveshare RPi Relay Board](https://www.waveshare.com/wiki/RPi_Relay_Board).
 
 ## Install dependencies (on Raspberry Pi only)
 
@@ -29,12 +52,19 @@ yarn dlx rpi-relay-hat-api
 
 ### Configure the application
 
-Create a rpi-relay-hat-api.env file (in a globally accessible location will allow it to be run as a service) and add details of the channels and server port, something like:
+Create a rpi-relay-hat-api.env file (in a globally accessible location will allow it to be run as a service, e.g. within /usr/lib/node_modules/rpi-relay-hat-api/) and add details of the channels and server port, something like:
 
 ```sh
 RELAY_HAT_CHANNELS=[{ "channelId": "CH1", "pinNo": 26, "mode": 1, "name": "Mirror Light" }, { "channelId": "CH2", "pinNo": 20, "mode": 1, "name": "Mirror Demister" }]
 PORT=3000
 ```
+
+| Property | Type | Meaning | Example |
+|----------|------|---------|---------|
+| channelId | string | Unique identifier in the format CH{n}, where n is a number between 1 and 9 | CH1 |
+| pinNo | number | BCM pin number, as per [RPi Relay Board - Interface description](https://www.waveshare.com/wiki/RPi_Relay_Board#Interface_description) | 20, 21, or 26 |
+| mode | number | Default value, 0 for off and 1 for on | 0 or 1 |
+| name | string | The display name for the switch | Mirror Light |
 
 ### Run the package
 
@@ -46,7 +76,7 @@ ENV_FILE_PATH=/usr/lib/node_modules/rpi-relay-hat-api/rpi-relay-hat-api.env rpi-
 
 Rather than installing the package, these development options allow it to be run and tested:
 
-## Download the package
+### Download the package
 
 ```sh
 git clone git@github.com:jondarrer/rpi-relay-hat-api
@@ -60,7 +90,7 @@ yarn
 yarn build
 ```
 
-### Configure the application
+### Configure the application for development
 
 Create a .env file and add details of the channels and server port, something like:
 
@@ -73,6 +103,12 @@ PORT=3000
 
 ```sh
 sudo yarn start
+```
+
+### Test
+
+```sh
+yarn test
 ```
 
 ## Endpoints
@@ -121,10 +157,4 @@ sudo pm2 save
 # sudo pm2 stop waveshare-api
 # sudo pm2 restart waveshare-api
 # sudo pm2 delete waveshare-api
-```
-
-## Test
-
-```sh
-yarn test
 ```
