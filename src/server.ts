@@ -1,17 +1,17 @@
 import express, { Request, Response } from 'express';
 
-import { port, channels } from './config';
+import { useMockGpio, channels } from './config';
 import { WaveshareRelayHat } from './waveshare-relay-hat';
 import { MockGpio, type ChannelId } from './types';
 import { systemInfo } from './system-info';
 
 const app = express();
-const PORT = port || 3000;
 let Gpio;
-if (process.platform === 'linux') {
-  Gpio = require('pigpio').Gpio;
-} else {
+if (useMockGpio) {
   Gpio = MockGpio;
+} else {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  Gpio = require('pigpio').Gpio;
 }
 const relayHat = new WaveshareRelayHat({
   Gpio,
@@ -55,7 +55,7 @@ app.get('/:id', (req: Request, res: Response) => {
   try {
     const { id, channel, state } = relayHat.get(req.params.id as ChannelId);
     return res.json({ id, pin: channel.gpio, state, name: getChannelName(id) });
-  } catch (error) {
+  } catch {
     console.error(new Date(), new Error(`Unable to find relay ${req.params.id}`));
     return res.json({ error: `Unable to find relay ${req.params.id}` });
   }
@@ -115,9 +115,7 @@ app.post('/:id/toggle', (req: Request, res: Response) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+export const server = app;
 
 const isValidChannel = (id: string): id is ChannelId =>
   ['CH1', 'CH2', 'CH3', 'CH4', 'CH5', 'CH6', 'CH7', 'CH8', 'CH9'].includes(id);

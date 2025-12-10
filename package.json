@@ -8,14 +8,14 @@
     "type": "git",
     "url": "https:///github.com/jondarrer/rpi-relay-hat-api"
   },
-  "main": "dist/server.js",
+  "main": "dist/start.js",
   "bin": "./bin/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/start.ts",
     "prepare": "husky",
-    "start": "node dist/src/server.js",
-    "test": "node --import tsx --test --experimental-test-module-mocks \"src/**/*.spec.ts\""
+    "start": "node dist/src/start.js",
+    "test": "ENV_FILE_PATH=./test.env node --import tsx --test --experimental-test-module-mocks \"src/**/*.spec.ts\""
   },
   "dependencies": {
     "dotenv": "^17.2.3",
@@ -39,11 +39,13 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
     "prettier-package-json": "^2.8.0",
+    "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.49.0"
   },
   "keywords": [
     "raspberry-pi",
@@ -55,13 +57,11 @@
   },
   "lint-staged": {
     "**/package.json": [
-      "prettier-package-json --write",
-      "git add"
+      "prettier-package-json --write"
     ],
     "src/**/*.ts": [
       "eslint --fix --quiet",
-      "prettier --single-quote --trailing-comma es5 --write",
-      "git add"
+      "prettier --single-quote --trailing-comma es5 --write"
     ]
   },
   "packageManager": "yarn@4.6.0"
